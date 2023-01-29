@@ -30,6 +30,8 @@ public class CarJpa {
     @Column(name = "availability", nullable = false)
     private boolean availability;
 
+
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

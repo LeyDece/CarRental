@@ -16,7 +16,19 @@ public class ApplicationUserService {
     @Autowired
     private ApplicationUserRepository userRepository;
 
-    public Optional<ApplicationuserJpa> getUser(Integer id){
+    public Optional<ApplicationuserJpa> getUserById(Integer id) {
         return userRepository.findById(id);
     }
+
+    public ApplicationuserJpa createUser(ApplicationuserJpa user) {
+        userRepository.save(user);
+        return user;
+    }
+
+    public Optional<ApplicationuserJpa> getUserByUsername(String username){
+        return userRepository.findByUsername(username);
+    }
+
+
+
 }
