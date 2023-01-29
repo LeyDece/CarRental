@@ -31,7 +31,7 @@ public class ApplicationUserController {
         return user;
     }
 
-    @GetMapping("/{username}")
+    @GetMapping("/getusername/{username}")
     public ApplicationuserJpa getByUsername(@PathVariable("username") String username){
         var user = applicationUserService.getUserByUsername(username);
         return user.orElse(null);

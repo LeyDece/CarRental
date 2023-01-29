@@ -1,8 +1,8 @@
 package efrei.carrental.model.jpa;
 
-import jakarta.persistence.*;
 import lombok.Data;
 
+import javax.persistence.*;
 import java.util.Objects;
 
 @Data

@@ -16,5 +16,4 @@ public interface CarRepository extends JpaRepository<CarJpa, Integer> {
     public List<CarJpa> findAll();
 
     public List<CarJpa> findAllByOfferFeeIsNotNull();
-
 }
