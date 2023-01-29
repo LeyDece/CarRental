@@ -34,4 +34,9 @@ public class CatalogController {
     List<CarJpa> getAllCars() {
         return catalogService.getAllCars();
     }
+
+    @GetMapping("/cars/offers")
+    List<CarJpa> getAllOffers() {
+        return catalogService.getAllOffers();
+    }
 }

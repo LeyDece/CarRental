@@ -30,7 +30,9 @@ public class CarJpa {
     @Column(name = "availability", nullable = false)
     private boolean availability;
 
-
+    @Basic
+    @Column(name = "offer_fee", precision = 2)
+    private BigDecimal offerFee;
 
     @Override
     public boolean equals(Object o) {

@@ -24,12 +24,15 @@ public class CatalogService {
         return carRepository.findAllByBrand(brand);
     }
 
-    public List<CarJpa> getAllCars(){
+    public List<CarJpa> getAllCars() {
         return carRepository.findAll();
     }
 
-    public List<CarJpa> createCars(List<CarJpa> cars){
+    public List<CarJpa> createCars(List<CarJpa> cars) {
         return carRepository.saveAll(cars);
     }
 
+    public List<CarJpa> getAllOffers(){
+        return carRepository.findAllByOfferFeeIsNotNull();
+    }
 }

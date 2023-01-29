@@ -26,6 +26,7 @@ CREATE TABLE car
     brand        VARCHAR(255)   NOT NULL,
     year         INTEGER        NOT NULL,
     rental_fee   NUMERIC(10, 2) NOT NULL,
+    offer_fee    NUMERIC(10, 2),
     availability BOOLEAN        NOT NULL
 );
 
@@ -56,6 +57,8 @@ INSERT INTO car (model, brand, year, rental_fee, availability)
 VALUES ('Model 3', 'Tesla', 2018, 80.00, true);
 INSERT INTO car (model, brand, year, rental_fee, availability)
 VALUES ('Model X', 'Tesla', 2016, 90.00, false);
+INSERT INTO car (model, brand, year, rental_fee, offer_fee, availability)
+VALUES ('Yaris', 'Toyota', 2010, 90.00, 40.00, false);
 
 -- Insert data into the rentals table
 INSERT INTO rental (customer, car, start_date, end_date, total_fee)
