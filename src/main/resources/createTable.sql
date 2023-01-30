@@ -22,7 +22,7 @@ CREATE TABLE applicationUser
 CREATE TABLE car
 (
     id           SERIAL PRIMARY KEY,
-    model        VARCHAR(255)   NOT NULL,
+    model        VARCHAR(255)   NOT NULL UNIQUE,
     brand        VARCHAR(255)   NOT NULL,
     year         INTEGER        NOT NULL,
     rental_fee   NUMERIC(10, 2) NOT NULL,
