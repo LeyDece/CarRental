@@ -1,6 +1,6 @@
 package efrei.carrental.controller;
 
-import efrei.carrental.Commons.AppExceptionCode;
+import efrei.carrental.commons.AppExceptionCode;
 import efrei.carrental.exceptions.AppException;
 import efrei.carrental.model.jpa.ApplicationuserJpa;
 import efrei.carrental.service.ApplicationUserService;

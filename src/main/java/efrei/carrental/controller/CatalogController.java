@@ -1,9 +1,12 @@
 package efrei.carrental.controller;
 
 
+import efrei.carrental.commons.AppExceptionCode;
+import efrei.carrental.exceptions.AppException;
 import efrei.carrental.model.jpa.CarJpa;
 import efrei.carrental.service.CatalogService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,12 +23,12 @@ public class CatalogController {
         return catalogService.createCars(cars);
     }
 
-    @GetMapping("/cars/{model}")
+    @GetMapping("/cars/model/{model}")
     CarJpa getCarByModel(@PathVariable("model") String model) {
-        return catalogService.getCarByModel(model).orElse(null);
+        return catalogService.getCarByModel(model).orElseThrow(() -> new AppException(HttpStatus.BAD_REQUEST, AppExceptionCode.CAR_NOT_FOUND, "Model does not exist"));
     }
 
-    @GetMapping("/cars/{brand}")
+    @GetMapping("/cars/brand/{brand}")
     List<CarJpa> getCarByBrand(@PathVariable("brand") String brand) {
         return catalogService.getCarByBrand(brand);
     }
@@ -38,5 +41,16 @@ public class CatalogController {
     @GetMapping("/cars/offers")
     List<CarJpa> getAllOffers() {
         return catalogService.getAllOffers();
+    }
+
+    @GetMapping("/cars/availability/{model}")
+    Boolean checkAvailabilityOfSpecificCar(@PathVariable("model") String model){
+        var car = catalogService.getCarByModel(model);
+        System.out.println(car);
+        if(car == null || car.isEmpty()){
+            throw new AppException(HttpStatus.BAD_REQUEST, AppExceptionCode.CAR_NOT_FOUND, "Model does not exist");
+        }
+        return car.get().isAvailability();
+
     }
 }

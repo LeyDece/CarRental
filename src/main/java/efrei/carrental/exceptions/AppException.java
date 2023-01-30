@@ -1,9 +1,8 @@
 package efrei.carrental.exceptions;
 
-import efrei.carrental.Commons.AppExceptionCode;
+import efrei.carrental.commons.AppExceptionCode;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
