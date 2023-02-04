@@ -3,11 +3,14 @@ package efrei.carrental.controller;
 
 import efrei.carrental.commons.AppExceptionCode;
 import efrei.carrental.exceptions.AppException;
+import efrei.carrental.model.dto.CarDto;
 import efrei.carrental.model.jpa.CarJpa;
 import efrei.carrental.service.CatalogService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import java.util.List;
 
@@ -44,13 +47,18 @@ public class CatalogController {
     }
 
     @GetMapping("/cars/availability/{model}")
-    Boolean checkAvailabilityOfSpecificCar(@PathVariable("model") String model){
+    Boolean checkAvailabilityOfSpecificCar(@PathVariable("model") String model) {
         var car = catalogService.getCarByModel(model);
         System.out.println(car);
-        if(car == null || car.isEmpty()){
+        if (car == null || car.isEmpty()) {
             throw new AppException(HttpStatus.BAD_REQUEST, AppExceptionCode.CAR_NOT_FOUND, "Model does not exist");
         }
         return car.get().isAvailability();
+    }
 
+    @PostMapping("/cars/search")
+    ResponseEntity<List<CarJpa>> getCarByCriteria(@RequestBody CarDto car) {
+        var cars = catalogService.getByCriteria(car);
+        return new ResponseEntity(cars, HttpStatus.OK);
     }
 }
