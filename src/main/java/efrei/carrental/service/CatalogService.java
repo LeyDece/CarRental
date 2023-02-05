@@ -1,6 +1,5 @@
 package efrei.carrental.service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import efrei.carrental.model.dto.CarDto;
 import efrei.carrental.model.jpa.CarJpa;
 import efrei.carrental.model.repo.CarRepository;
@@ -9,7 +8,6 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.util.*;
 

@@ -1,7 +1,6 @@
 package efrei.carrental.model.jpa;
 
 import lombok.Data;
-
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.Objects;

@@ -2,7 +2,7 @@ DROP DATABASE IF EXISTS carrentaldb;
 CREATE DATABASE carrentaldb;
 \connect carrentaldb;
 
--- Drop the tables if they already exist
+/*-- Drop the tables if they already exist
 DROP TABLE IF EXISTS applicationUser CASCADE;
 DROP TABLE IF EXISTS car CASCADE;
 DROP TABLE IF EXISTS rental CASCADE;
@@ -67,3 +67,6 @@ INSERT INTO rental (customer, car, start_date, end_date, total_fee)
 VALUES (2, 2, '2022-02-01', '2022-02-07', 560.00);
 INSERT INTO rental (customer, car, start_date, end_date, total_fee)
 VALUES (1, 3, '2022-03-01', '2022-03-07', 630.00);
+
+
+ */
