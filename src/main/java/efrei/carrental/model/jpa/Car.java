@@ -8,37 +8,37 @@ import java.util.Objects;
 @Data
 @Entity
 @Table(name = "car", schema = "public", catalog = "postgres")
-public class CarJpa {
+public class Car {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     @Column(name = "id", nullable = false)
-    private int id;
+    public int id;
     @Basic
     @Column(name = "model", nullable = false, length = 255)
-    private String model;
+    public String model;
     @Basic
     @Column(name = "brand", nullable = false, length = 255)
-    private String brand;
+    public String brand;
     @Basic
     @Column(name = "year", nullable = false)
-    private int year;
+    public int year;
     @Basic
     @Column(name = "rental_fee", nullable = false, precision = 2)
-    private BigDecimal rentalFee;
+    public BigDecimal rentalFee;
     @Basic
     @Column(name = "availability", nullable = false)
-    private boolean availability;
+    public boolean availability;
 
     @Basic
     @Column(name = "offer_fee", precision = 2)
-    private BigDecimal offerFee;
+    public BigDecimal offerFee;
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        CarJpa carJpa = (CarJpa) o;
-        return id == carJpa.id && year == carJpa.year && availability == carJpa.availability && Objects.equals(model, carJpa.model) && Objects.equals(brand, carJpa.brand) && Objects.equals(rentalFee, carJpa.rentalFee);
+        Car car = (Car) o;
+        return id == car.id && year == car.year && availability == car.availability && Objects.equals(model, car.model) && Objects.equals(brand, car.brand) && Objects.equals(rentalFee, car.rentalFee);
     }
 
     @Override

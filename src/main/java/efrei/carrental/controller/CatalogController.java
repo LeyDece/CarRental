@@ -4,7 +4,7 @@ package efrei.carrental.controller;
 import efrei.carrental.commons.AppExceptionCode;
 import efrei.carrental.exceptions.AppException;
 import efrei.carrental.model.dto.CarDto;
-import efrei.carrental.model.jpa.CarJpa;
+import efrei.carrental.model.jpa.Car;
 import efrei.carrental.service.CatalogService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,27 +21,27 @@ public class CatalogController {
     CatalogService catalogService;
 
     @PostMapping("/cars")
-    List<CarJpa> getCarByModel(@RequestBody List<CarJpa> cars) {
+    List<Car> getCarByModel(@RequestBody List<Car> cars) {
         return catalogService.createCars(cars);
     }
 
     @GetMapping("/cars/model/{model}")
-    CarJpa getCarByModel(@PathVariable("model") String model) {
+    Car getCarByModel(@PathVariable("model") String model) {
         return catalogService.getCarByModel(model).orElseThrow(() -> new AppException(HttpStatus.BAD_REQUEST, AppExceptionCode.CAR_NOT_FOUND, "Model does not exist"));
     }
 
     @GetMapping("/cars/brand/{brand}")
-    List<CarJpa> getCarByBrand(@PathVariable("brand") String brand) {
+    List<Car> getCarByBrand(@PathVariable("brand") String brand) {
         return catalogService.getCarByBrand(brand);
     }
 
     @GetMapping("/cars")
-    List<CarJpa> getAllCars() {
+    List<Car> getAllCars() {
         return catalogService.getAllCars();
     }
 
     @GetMapping("/cars/offers")
-    List<CarJpa> getAllOffers() {
+    List<Car> getAllOffers() {
         return catalogService.getAllOffers();
     }
 
@@ -56,7 +56,7 @@ public class CatalogController {
     }
 
     @PostMapping("/cars/search")
-    ResponseEntity<List<CarJpa>> getCarByCriteria(@RequestBody CarDto car) {
+    ResponseEntity<List<Car>> getCarByCriteria(@RequestBody CarDto car) {
         var cars = catalogService.getByCriteria(car);
         return new ResponseEntity(cars, HttpStatus.OK);
     }

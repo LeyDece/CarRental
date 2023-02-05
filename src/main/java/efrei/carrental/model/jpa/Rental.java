@@ -1,5 +1,7 @@
 package efrei.carrental.model.jpa;
 
+import lombok.Data;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
@@ -7,19 +9,20 @@ import java.sql.Date;
 import java.util.Objects;
 
 @Embeddable
-public class RentalJpa {
+@Data
+public class Rental {
 
     @ManyToOne( cascade = CascadeType.ALL )
     @JoinColumn(name = "car_id", referencedColumnName = "id")
-    private CarJpa car;
+    public Car car;
     @NotNull
-    private Date startDate;
+    public Date startDate;
 
     @NotNull
-    private Date endDate;
+    public Date endDate;
 
     @NotNull
-    private BigDecimal price;
+    public BigDecimal price;
 
     @Override
     public int hashCode() {
