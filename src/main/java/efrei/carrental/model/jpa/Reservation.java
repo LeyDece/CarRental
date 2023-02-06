@@ -18,7 +18,7 @@ public class Reservation {
 
     @ManyToOne()
     @JoinColumn(name = "applicationuser_id", referencedColumnName = "id")
-    Applicationuser user;
+    private Applicationuser user;
 
     @ElementCollection
     @CollectionTable(

@@ -1,4 +1,4 @@
-package efrei.carrental.model;
+package efrei.carrental.model.mapper;
 
 
 import efrei.carrental.model.dto.RentalDto;

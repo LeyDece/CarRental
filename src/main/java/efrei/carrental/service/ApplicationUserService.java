@@ -3,10 +3,9 @@ package efrei.carrental.service;
 
 import efrei.carrental.commons.AppExceptionCode;
 import efrei.carrental.exceptions.AppException;
-import efrei.carrental.model.RentalMapper;
+import efrei.carrental.model.mapper.RentalMapper;
 import efrei.carrental.model.dto.RentalDto;
 import efrei.carrental.model.jpa.Applicationuser;
-import efrei.carrental.model.jpa.Rental;
 import efrei.carrental.model.jpa.Reservation;
 import efrei.carrental.model.repo.ApplicationUserRepository;
 import efrei.carrental.model.repo.ReservationRepository;
@@ -51,48 +50,45 @@ public class ApplicationUserService {
         return userRepository.findByUsername(username);
     }
 
-
     public void addRentalToCart(RentalDto rentalDto, int customerId) {
-        var user = userRepository.findById(customerId);
-        var car = catalogService.getCarById(rentalDto.getCarId());
+        var user = userRepository.findById(customerId).orElseThrow(() -> new AppException(HttpStatus.BAD_REQUEST, AppExceptionCode.CAR_NOT_FOUND, "Cannot rent a non existing car"));
+        var car = catalogService.getCarById(rentalDto.getCarId()).orElseThrow(() -> new AppException(HttpStatus.BAD_REQUEST, AppExceptionCode.USER_NOT_FOUND, "Cannot add rentalDto to non existing user"));
 
-        if (car.isEmpty())
-            throw new AppException(HttpStatus.BAD_REQUEST, AppExceptionCode.CAR_NOT_FOUND, "Cannot rent a non existing car");
-        if (user.isEmpty())
-            throw new AppException(HttpStatus.BAD_REQUEST, AppExceptionCode.USER_NOT_FOUND, "Cannot add rentalDto to non existing user");
+        if(!car.isAvailability()) throw new AppException(HttpStatus.BAD_REQUEST, AppExceptionCode.CAR_NOT_IN_STOCK, "Car not in stock");
 
         var rental = rentalMapper.fromDTO(rentalDto);
-        rental.setCar(car.get());
-        user.get().getCart().add(rental);
-        userRepository.save(user.get());
+        rental.setCar(car);
+        user.getCart().add(rental);
+        userRepository.save(user);
     }
 
     public void clearCart(int customerId) {
-        var user = userRepository.findById(customerId);
-        if (user.isEmpty())
-            throw new AppException(HttpStatus.BAD_REQUEST, AppExceptionCode.USER_NOT_FOUND, "Cannot clear non existing user cart");
+        var user = userRepository.findById(customerId).orElseThrow(() -> new AppException(HttpStatus.BAD_REQUEST, AppExceptionCode.USER_NOT_FOUND, "Cannot clear non existing user cart"));
 
-        user.get().getCart().clear();
-        userRepository.save(user.get());
+        user.getCart().clear();
+        userRepository.save(user);
     }
 
     public List<RentalDto> getCartContent(int customerId) {
-        var user = userRepository.findById(customerId);
-        if (user.isEmpty())
-            throw new AppException(HttpStatus.BAD_REQUEST, AppExceptionCode.USER_NOT_FOUND, "Cannot get cart of non existing user");
-
-        return user.get().getCart().stream().map(e -> rentalMapper.toDTO(e)).toList();
+        var user = userRepository.findById(customerId).orElseThrow(() -> new AppException(HttpStatus.BAD_REQUEST, AppExceptionCode.USER_NOT_FOUND, "Cannot get cart of non existing user"));
+        return user.getCart().stream().map(e -> rentalMapper.toDTO(e)).toList();
     }
 
-    public void submitCart(int customerId){
-        var user = userRepository.findById(customerId).orElseThrow(()-> new AppException(HttpStatus.BAD_REQUEST, AppExceptionCode.USER_NOT_FOUND, "Cannot get cart of non existing user"));
+    public void submitCart(int customerId) {
+        var user = userRepository.findById(customerId).orElseThrow(() -> new AppException(HttpStatus.BAD_REQUEST, AppExceptionCode.USER_NOT_FOUND, "Cannot get cart of non existing user"));
 
-        //@TODO Verify car stock
+        Reservation reservation = createReservationAndClearCart(user);
+        reservationRepository.save(reservation);
+    }
 
+    private Reservation createReservationAndClearCart(Applicationuser user) {
         Reservation reservation = new Reservation();
         reservation.getRentals().addAll(user.getCart());
         reservation.setUser(user);
-        reservationRepository.save(reservation);
+
+        clearCart(user.id);
+
+        return reservation;
     }
 
 }

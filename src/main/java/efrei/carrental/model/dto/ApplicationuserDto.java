@@ -4,16 +4,17 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.NotNull;
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class RentalRequestBodyDto {
+public class ApplicationuserDto {
 
-    @NotNull
-    private int customerId;
+    public int id;
 
-    @NotNull
-    private RentalDto rentalDto;
+    public String username;
+
+    public String email;
+
+    public String userType;
+
 }

@@ -2,14 +2,16 @@ package efrei.carrental.controller;
 
 import efrei.carrental.commons.AppExceptionCode;
 import efrei.carrental.exceptions.AppException;
+import efrei.carrental.model.dto.RentalDto;
 import efrei.carrental.model.dto.RentalRequestBodyDto;
 import efrei.carrental.model.jpa.Applicationuser;
 import efrei.carrental.service.ApplicationUserService;
-import efrei.carrental.service.RentalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping(path = "/rest/users")
@@ -52,22 +54,22 @@ public class ApplicationUserController {
         return new ResponseEntity(HttpStatus.OK);
     }
 
+    @GetMapping("/cart/{id}")
+    public ResponseEntity<List<RentalDto>> getCartContent(@PathVariable("id") int customerId) {
+        var content = applicationUserService.getCartContent(customerId);
+        return new ResponseEntity(content, HttpStatus.OK);
+    }
+
     @GetMapping("/cart/clear/{id}")
-    public ResponseEntity clearCart(@PathVariable("id") int userId) {
-        applicationUserService.clearCart(userId);
+    public ResponseEntity clearCart(@PathVariable("id") int customerId) {
+        applicationUserService.clearCart(customerId);
         return new ResponseEntity(HttpStatus.OK);
     }
 
     @GetMapping("/cart/submit/{id}")
-    public ResponseEntity submitCart(@PathVariable("id") int userId) {
-        applicationUserService.submitCart(userId);
-        applicationUserService.clearCart(userId);
+    public ResponseEntity submitCart(@PathVariable("id") int customerId) {
+        applicationUserService.submitCart(customerId);
         return new ResponseEntity(HttpStatus.OK);
     }
 
-    @GetMapping("/")
-    public String hello() {
-        System.out.println("IN GET USER");
-        return "hello";
-    }
 }

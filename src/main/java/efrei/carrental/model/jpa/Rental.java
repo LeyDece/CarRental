@@ -23,7 +23,6 @@ public class Rental {
 
     @NotNull
     public BigDecimal price;
-
     @Override
     public int hashCode() {
         return Objects.hash(car, startDate, endDate, price);
