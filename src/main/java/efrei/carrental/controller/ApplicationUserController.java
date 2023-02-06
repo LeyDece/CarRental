@@ -2,11 +2,16 @@ package efrei.carrental.controller;
 
 import efrei.carrental.commons.AppExceptionCode;
 import efrei.carrental.exceptions.AppException;
-import efrei.carrental.model.jpa.ApplicationuserJpa;
+import efrei.carrental.model.dto.RentalDto;
+import efrei.carrental.model.dto.RentalRequestBodyDto;
+import efrei.carrental.model.jpa.Applicationuser;
 import efrei.carrental.service.ApplicationUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping(path = "/rest/users")
@@ -16,13 +21,13 @@ public class ApplicationUserController {
     ApplicationUserService applicationUserService;
 
     @GetMapping("/{id}")
-    public ApplicationuserJpa getUserById(@PathVariable("id") int id) {
+    public Applicationuser getUserById(@PathVariable("id") int id) {
         var user = applicationUserService.getUserById(id);
         return user.orElse(null);
     }
 
     @PostMapping("")
-    public ApplicationuserJpa createUser(@RequestBody ApplicationuserJpa user) throws AppException {
+    public Applicationuser createUser(@RequestBody Applicationuser user) throws AppException {
         try {
             applicationUserService.createUser(user);
         } catch (Exception e) {
@@ -32,20 +37,39 @@ public class ApplicationUserController {
     }
 
     @GetMapping("/getusername/{username}")
-    public ApplicationuserJpa getByUsername(@PathVariable("username") String username){
+    public Applicationuser getByUsername(@PathVariable("username") String username) {
         var user = applicationUserService.getUserByUsername(username);
         return user.orElse(null);
     }
 
     @GetMapping("/{username}/isRegistered")
-    public Boolean isRegistered(@PathVariable("username") String username){
+    public Boolean isRegistered(@PathVariable("username") String username) {
         var user = applicationUserService.getUserByUsername(username);
         return user.isPresent();
     }
 
-    @GetMapping("/")
-    public String hello() {
-        System.out.println("IN GET USER");
-        return "hello";
+    @PostMapping("/cart/add")
+    public ResponseEntity addRentalToCart(@RequestBody RentalRequestBodyDto rental) {
+        applicationUserService.addRentalToCart(rental.getRentalDto(), rental.getCustomerId());
+        return new ResponseEntity(HttpStatus.OK);
     }
+
+    @GetMapping("/cart/{id}")
+    public ResponseEntity<List<RentalDto>> getCartContent(@PathVariable("id") int customerId) {
+        var content = applicationUserService.getCartContent(customerId);
+        return new ResponseEntity(content, HttpStatus.OK);
+    }
+
+    @GetMapping("/cart/clear/{id}")
+    public ResponseEntity clearCart(@PathVariable("id") int customerId) {
+        applicationUserService.clearCart(customerId);
+        return new ResponseEntity(HttpStatus.OK);
+    }
+
+    @GetMapping("/cart/submit/{id}")
+    public ResponseEntity submitCart(@PathVariable("id") int customerId) {
+        applicationUserService.submitCart(customerId);
+        return new ResponseEntity(HttpStatus.OK);
+    }
+
 }
