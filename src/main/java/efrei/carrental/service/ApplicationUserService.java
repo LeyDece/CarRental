@@ -10,8 +10,12 @@ import efrei.carrental.model.jpa.Reservation;
 import efrei.carrental.model.repo.ApplicationUserRepository;
 import efrei.carrental.model.repo.ReservationRepository;
 import org.mapstruct.factory.Mappers;
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,11 +34,16 @@ public class ApplicationUserService {
 
     RentalMapper rentalMapper = Mappers.getMapper(RentalMapper.class);
 
+    private JavaMailSender mailSender;
+
+    private Environment env;
     @Autowired
-    public ApplicationUserService(ApplicationUserRepository userRepository, CatalogService catalogService, ReservationRepository reservationRepository) {
+    public ApplicationUserService(ApplicationUserRepository userRepository, CatalogService catalogService, ReservationRepository reservationRepository, JavaMailSender mailSender, Environment env) {
         this.userRepository = userRepository;
         this.catalogService = catalogService;
         this.reservationRepository = reservationRepository;
+        this.mailSender = mailSender;
+        this.env = env;
     }
 
     public Optional<Applicationuser> getUserById(Integer id) {
@@ -78,7 +87,8 @@ public class ApplicationUserService {
         var user = userRepository.findById(customerId).orElseThrow(() -> new AppException(HttpStatus.BAD_REQUEST, AppExceptionCode.USER_NOT_FOUND, "Cannot get cart of non existing user"));
 
         Reservation reservation = createReservationAndClearCart(user);
-        reservationRepository.save(reservation);
+        var newReservation = reservationRepository.save(reservation);
+        confirmReservation(env.getProperty("spring.mail.username"), user.getEmail(), newReservation.getId(), user.getId());
     }
 
     private Reservation createReservationAndClearCart(Applicationuser user) {
@@ -89,6 +99,16 @@ public class ApplicationUserService {
         clearCart(user.id);
 
         return reservation;
+    }
+
+    private void confirmReservation(String emailFrom, String emailTo, int reservationId, int userId){
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setFrom(emailFrom);
+        message.setTo(emailTo);
+        message.setSubject("Confirmation de la réservation");
+        message.setText("Lien pour valider la réservation : http://localhost:8080/rest/reservation/valid/" + reservationId + "/"+ userId +"");
+
+        mailSender.send(message);
     }
 
 }
