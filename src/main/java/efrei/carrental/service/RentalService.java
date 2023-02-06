@@ -17,25 +17,6 @@ public class RentalService {
     @Autowired
     ApplicationUserService applicationUserService;
 
-    @Autowired
-    CatalogService catalogService;
 
-    RentalMapper rentalMapper = Mappers.getMapper(RentalMapper.class);
-
-    public void addRentalToCart(RentalDto rentalDto, int customerId) {
-        var user = applicationUserService.getUserById(customerId);
-        var car = catalogService.getCarById(rentalDto.getCarId());
-
-        if (car.isEmpty())
-            throw new AppException(HttpStatus.BAD_REQUEST, AppExceptionCode.CAR_NOT_FOUND, "Cannot rent a non existing car");
-        if (user.isEmpty())
-            throw new AppException(HttpStatus.BAD_REQUEST, AppExceptionCode.USER_NOT_FOUND, "Cannot add rentalDto to non existing user");
-
-        var rental = rentalMapper.fromDTO(rentalDto);
-        rental.setCar(car.get());
-        user.get().getCart().add(rental);
-        applicationUserService.createUser(user.get());
-
-    }
 
 }

@@ -18,9 +18,6 @@ public class ApplicationUserController {
     @Autowired
     ApplicationUserService applicationUserService;
 
-    @Autowired
-    RentalService rentalService;
-
     @GetMapping("/{id}")
     public Applicationuser getUserById(@PathVariable("id") int id) {
         var user = applicationUserService.getUserById(id);
@@ -49,9 +46,22 @@ public class ApplicationUserController {
         return user.isPresent();
     }
 
-    @PostMapping("/addRental")
+    @PostMapping("/cart/add")
     public ResponseEntity addRentalToCart(@RequestBody RentalRequestBodyDto rental) {
-        rentalService.addRentalToCart(rental.getRentalDto(), rental.getCustomerId());
+        applicationUserService.addRentalToCart(rental.getRentalDto(), rental.getCustomerId());
+        return new ResponseEntity(HttpStatus.OK);
+    }
+
+    @GetMapping("/cart/clear/{id}")
+    public ResponseEntity clearCart(@PathVariable("id") int userId) {
+        applicationUserService.clearCart(userId);
+        return new ResponseEntity(HttpStatus.OK);
+    }
+
+    @GetMapping("/cart/submit/{id}")
+    public ResponseEntity submitCart(@PathVariable("id") int userId) {
+        applicationUserService.submitCart(userId);
+        applicationUserService.clearCart(userId);
         return new ResponseEntity(HttpStatus.OK);
     }
 

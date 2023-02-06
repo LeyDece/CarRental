@@ -36,7 +36,6 @@ public class Applicationuser {
     )
     public List<Rental> cart = new ArrayList<>();
 
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
