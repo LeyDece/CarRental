@@ -19,4 +19,4 @@ you can test our routes also by identifying as a customer with the following cre
 - username: customer
 - password: customer
 
-Voici le github du projet : https://github.com/LeyDece/CarRental
+You can check the github repo : https://github.com/LeyDece/CarRental
