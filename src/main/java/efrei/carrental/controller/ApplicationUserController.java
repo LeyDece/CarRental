@@ -9,16 +9,23 @@ import efrei.carrental.service.ApplicationUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.session.SessionRepository;
+import org.springframework.session.jdbc.config.annotation.web.http.EnableJdbcHttpSession;
+import org.springframework.session.web.http.SessionRepositoryFilter;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping(path = "/rest/users")
+@EnableJdbcHttpSession
 public class ApplicationUserController {
 
     @Autowired
     ApplicationUserService applicationUserService;
+
+    @Autowired
+    SessionRepository sessions;
 
     @GetMapping("/{id}")
     public Applicationuser getUserById(@PathVariable("id") int id) {
@@ -70,6 +77,15 @@ public class ApplicationUserController {
     public ResponseEntity submitCart(@PathVariable("id") int customerId) {
         applicationUserService.submitCart(customerId);
         return new ResponseEntity(HttpStatus.OK);
+    }
+
+    @GetMapping("/sessions")
+    public ResponseEntity getSession() {
+        var session = sessions.createSession();
+        session.setAttribute("user_id", "test_user");
+        sessions.save(session);
+
+        return new ResponseEntity(session, HttpStatus.OK);
     }
 
 }
