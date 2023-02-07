@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.session.SessionRepository;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,6 +30,15 @@ public class ApplicationUserController {
     public ApplicationUser getUserById(@PathVariable("id") int id) {
         var user = applicationUserService.getUserById(id);
         return user.orElse(null);
+    }
+
+    @GetMapping("/me")
+    public ApplicationUser getInfos(Authentication authentication) {
+        if(authentication.isAuthenticated()){
+            var user = applicationUserService.getUserByUsername(authentication.getName()).get();
+            return user;
+        }
+        throw new AppException(HttpStatus.BAD_REQUEST, AppExceptionCode.ACCESSDENIED, "User not authentified");
     }
 
     @PostMapping("")

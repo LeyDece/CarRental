@@ -20,7 +20,7 @@ public class CatalogController {
     CatalogService catalogService;
 
     @PostMapping("/cars")
-    List<Car> getCarByModel(@RequestBody List<Car> cars) {
+    List<Car> createCarByModel(@RequestBody List<Car> cars) {
         return catalogService.createCars(cars);
     }
 
