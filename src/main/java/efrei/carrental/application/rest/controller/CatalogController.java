@@ -8,6 +8,7 @@ import efrei.carrental.domain.service.CatalogService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,6 +21,7 @@ public class CatalogController {
     CatalogService catalogService;
 
     @PostMapping("/cars")
+    @PreAuthorize("hasAnyAuthority('ROLE_AGENT')")
     List<Car> createCarByModel(@RequestBody List<Car> cars) {
         return catalogService.createCars(cars);
     }
@@ -45,6 +47,7 @@ public class CatalogController {
     }
 
     @GetMapping("/cars/availability/{model}")
+    @PreAuthorize("hasAnyAuthority('ROLE_AGENT')")
     Boolean checkAvailabilityOfSpecificCar(@PathVariable("model") String model) {
         var car = catalogService.getCarByModel(model);
         System.out.println(car);

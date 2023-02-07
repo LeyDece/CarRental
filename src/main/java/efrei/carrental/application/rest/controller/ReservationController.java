@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -26,6 +27,7 @@ public class ReservationController {
     }
 
     @GetMapping("/report")
+    @PreAuthorize("hasAnyAuthority('ROLE_AGENT')")
     public ResponseEntity<ReportDto> getReport() {
         var report = rentalService.getReservationAndAvailabilityReport();
         return new ResponseEntity(report, HttpStatus.OK);

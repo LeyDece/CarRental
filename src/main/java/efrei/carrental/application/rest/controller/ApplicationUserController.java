@@ -33,6 +33,7 @@ public class ApplicationUserController {
     }
 
     @GetMapping("/me")
+    @PreAuthorize("hasAnyAuthority('ROLE_CUSTOMER')")
     public ApplicationUser getInfos(Authentication authentication) {
         if(authentication.isAuthenticated()){
             var user = applicationUserService.getUserByUsername(authentication.getName()).get();
