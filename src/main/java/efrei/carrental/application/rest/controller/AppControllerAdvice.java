@@ -1,10 +1,13 @@
 package efrei.carrental.application.rest.controller;
 
 import efrei.carrental.application.exceptions.AppException;
+import efrei.carrental.application.exceptions.AppExceptionCode;
 import efrei.carrental.application.model.RestExceptionDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -36,6 +39,18 @@ public class AppControllerAdvice {
         response.error = ex.getCode().name();
 
         return ResponseEntity.status(ex.getStatus()).body(response);
+    }
+
+    @ExceptionHandler({AccessDeniedException.class})
+    public ResponseEntity<Object> handleAppException(AccessDeniedException ex) {
+        RestExceptionDto response = new RestExceptionDto();
+
+        response.timestamp = Instant.now().toEpochMilli();
+        response.status = HttpStatus.FORBIDDEN.value();
+        response.message = ex.getMessage();
+        response.error = AppExceptionCode.ACCESSDENIED.name();
+
+        return ResponseEntity.status(response.status).body(response);
     }
 }
 

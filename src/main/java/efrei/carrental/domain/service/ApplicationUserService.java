@@ -4,7 +4,8 @@ package efrei.carrental.domain.service;
 import efrei.carrental.application.exceptions.AppExceptionCode;
 import efrei.carrental.application.exceptions.AppException;
 import efrei.carrental.application.dto.RentalDto;
-import efrei.carrental.external.entity.Applicationuser;
+import efrei.carrental.application.security.AppRole;
+import efrei.carrental.external.entity.ApplicationUser;
 import efrei.carrental.external.entity.Reservation;
 import efrei.carrental.application.mapper.RentalMapper;
 import efrei.carrental.external.repository.ApplicationUserRepository;
@@ -15,9 +16,11 @@ import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.PostConstruct;
 import java.util.List;
 import java.util.Optional;
 
@@ -35,26 +38,30 @@ public class ApplicationUserService {
 
     private JavaMailSender mailSender;
 
+    private PasswordEncoder passwordEncoder;
     private Environment env;
+
     @Autowired
-    public ApplicationUserService(ApplicationUserRepository userRepository, CatalogService catalogService, ReservationRepository reservationRepository, JavaMailSender mailSender, Environment env) {
+    public ApplicationUserService(ApplicationUserRepository userRepository, CatalogService catalogService, ReservationRepository reservationRepository, JavaMailSender mailSender, Environment env, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.catalogService = catalogService;
         this.reservationRepository = reservationRepository;
         this.mailSender = mailSender;
         this.env = env;
+        this.passwordEncoder = passwordEncoder;
     }
 
-    public Optional<Applicationuser> getUserById(Integer id) {
+    public Optional<ApplicationUser> getUserById(Integer id) {
         return userRepository.findById(id);
     }
 
-    public Applicationuser createUser(Applicationuser user) {
+    public ApplicationUser createUser(ApplicationUser user) {
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.save(user);
         return user;
     }
 
-    public Optional<Applicationuser> getUserByUsername(String username) {
+    public Optional<ApplicationUser> getUserByUsername(String username) {
         return userRepository.findByUsername(username);
     }
 
@@ -90,7 +97,7 @@ public class ApplicationUserService {
         confirmReservation(env.getProperty("spring.mail.username"), user.getEmail(), newReservation.getId(), user.getId());
     }
 
-    private Reservation createReservationAndClearCart(Applicationuser user) {
+    private Reservation createReservationAndClearCart(ApplicationUser user) {
         Reservation reservation = new Reservation();
         reservation.getRentals().addAll(user.getCart());
         reservation.setUser(user);

@@ -14,7 +14,7 @@ public class ReservationDto {
 
     private int id;
 
-    private ApplicationuserDto user;
+    private ApplicationUserDto user;
 
     private List<RentalDto> rentals = new ArrayList<>();
 
