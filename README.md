@@ -7,7 +7,7 @@ go in the root folder, and launch the database with the following command:
 start the application by running :
 - ./mvnw spring-boot:run or running directly with your ide
 
-an agent user is created at appplication initialization with the following credentials :
+an agent user is created at application initialization with the following credentials :
 - username : admin
 - password : admin
 
@@ -18,3 +18,5 @@ when trying to access a route log in as the agent previously specified.
 you can test our routes also by identifying as a customer with the following credentials
 - username: customer
 - password: customer
+
+Voici le github du projet : https://github.com/LeyDece/CarRental
