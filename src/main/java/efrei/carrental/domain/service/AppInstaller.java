@@ -25,6 +25,14 @@ public class AppInstaller implements ApplicationListener<ContextRefreshedEvent> 
     @Value("${app.superadmin.password}")
     private String superadminPassword;
 
+    @Value("${app.customer.email}")
+    private String supercustomerEmail;
+
+    @Value("${app.customer.username}")
+    private String supercustomerUsername;
+    @Value("${app.customer.password}")
+    private String supercustomerPassword;
+
     @Autowired
     private ApplicationUserRepository applicationUserRepository;
     @Autowired
@@ -38,6 +46,7 @@ public class AppInstaller implements ApplicationListener<ContextRefreshedEvent> 
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
         this.createSuperadmin();
+        this.createSuperCustomer();
     }
 
     /**
@@ -53,6 +62,18 @@ public class AppInstaller implements ApplicationListener<ContextRefreshedEvent> 
             applicationUserService.createUser(applicationUser);
         }
         logger.info("Created superadmin {}", this.superadminEmail);
+    }
+
+    private void createSuperCustomer(){
+        if(applicationUserRepository.findByUsername(supercustomerUsername).isEmpty()) {
+            ApplicationUser applicationUser = new ApplicationUser();
+            applicationUser.setUserType(AppRole.CUSTOMER.name());
+            applicationUser.setUsername(supercustomerUsername);
+            applicationUser.setPassword(supercustomerPassword);
+            applicationUser.setEmail(supercustomerEmail);
+            applicationUserService.createUser(applicationUser);
+        }
+        logger.info("Created supercustomer {}", this.supercustomerEmail);
     }
 }
 
