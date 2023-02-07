@@ -3,14 +3,13 @@ package efrei.carrental.service;
 
 import efrei.carrental.commons.AppExceptionCode;
 import efrei.carrental.exceptions.AppException;
-import efrei.carrental.model.mapper.RentalMapper;
 import efrei.carrental.model.dto.RentalDto;
 import efrei.carrental.model.jpa.Applicationuser;
 import efrei.carrental.model.jpa.Reservation;
+import efrei.carrental.model.mapper.RentalMapper;
 import efrei.carrental.model.repo.ApplicationUserRepository;
 import efrei.carrental.model.repo.ReservationRepository;
 import org.mapstruct.factory.Mappers;
-import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;

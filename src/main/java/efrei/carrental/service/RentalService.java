@@ -3,8 +3,6 @@ package efrei.carrental.service;
 import efrei.carrental.model.dto.ReportDto;
 import efrei.carrental.model.mapper.CarMapper;
 import efrei.carrental.model.mapper.ReservationMapper;
-import efrei.carrental.model.repo.ApplicationUserRepository;
-import efrei.carrental.model.repo.CarRepository;
 import efrei.carrental.model.repo.ReservationRepository;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
